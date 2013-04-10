@@ -1,0 +1,30 @@
+These issues were found by Coverity static analysis tool, for more info
+see messages by particular fixes (messages belong to 5.1.61).
+
+Filed upstream at http://bugs.mysql.com/bug.php?id=64631
+
+
+diff -up mysql-5.5.28/sql/sql_prepare.cc.p20 mysql-5.5.28/sql/sql_prepare.cc
+--- mysql-5.5.28/sql/sql_prepare.cc.p20	2012-08-29 10:50:46.000000000 +0200
++++ mysql-5.5.28/sql/sql_prepare.cc	2012-12-06 14:27:28.647087401 +0100
+@@ -2879,7 +2879,7 @@ void mysql_stmt_get_longdata(THD *thd, c
+   {
+     stmt->state= Query_arena::STMT_ERROR;
+     stmt->last_errno= thd->get_stmt_da()->sql_errno();
+-    strncpy(stmt->last_error, thd->get_stmt_da()->message(), MYSQL_ERRMSG_SIZE);
++    strncpy(stmt->last_error, thd->get_stmt_da()->message(), sizeof(stmt->last_error)-1);
+   }
+   thd->set_stmt_da(save_stmt_da);
+
+diff -up mysql-5.5.28/sql/sql_trigger.cc.p20 mysql-5.5.28/sql/sql_trigger.cc
+--- mysql-5.5.28/sql/sql_trigger.cc.p20	2012-08-29 10:50:46.000000000 +0200
++++ mysql-5.5.28/sql/sql_trigger.cc	2012-12-06 14:27:28.648087398 +0100
+@@ -2260,7 +2260,7 @@ void Table_triggers_list::mark_fields_us
+ void Table_triggers_list::set_parse_error_message(char *error_message)
+ {
+   m_has_unparseable_trigger= true;
+-  strcpy(m_parse_error_message, error_message);
++  strncpy(m_parse_error_message, error_message, sizeof(m_parse_error_message)-1);
+ }
+ 
+ 

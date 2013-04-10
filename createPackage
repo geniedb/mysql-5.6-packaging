@@ -1,0 +1,60 @@
+#!/bin/sh
+
+minor_version= # v
+skip_dependencies= # s
+debuild_opts=
+rpmbuild_opts=
+usage="Usage: %s [-s] [-v VERSION]
+
+Build MySQL packages for the current distribution. Currently supports
+Debian and Redhat/CentOS.
+
+Options:
+  -s               Do not check that build dependencies are installed.
+  -v VERSION       Append VERSION to the version number.
+
+On debian you must install 'build-essential' and the packages listed in
+debian/control as Build-Depends, except mysql-source. You must use the '-s'
+option.
+
+On redhat you must install the 'Development Tools' yum group and the
+packages listed in redhat/mysql.spec as BuildRequires.
+"
+
+while getopts sv:h name
+do
+  case $name in
+  s)  skip_dependencies=1;;
+  v)  minor_version="$OPTARG";;
+  h)  printf "$usage" $0
+      exit 0;;
+  ?)  printf "$usage" $0
+      exit 2; 
+  esac
+done
+
+if [ -f /etc/debian_version -o -f /etc/debian_release ] ; then
+  if [ -n "$minor_version" ] ; then
+    DEBFULLNAME="GenieDB Ltd." DEBEMAIL="tech@geniedb.com" dch -l+$minor_version Release
+    DEBFULLNAME="GenieDB Ltd." DEBEMAIL="tech@geniedb.com" dch -r ""
+  fi 
+  if [ -n "$skip_dependencies" ]; then
+    debuild_opts="$debuild_opts -d"
+  fi
+  uscan --download-current-version
+  debuild -uc -us -b -i $debuild_opts
+  mv ../mysql*.deb ../libmysql*.deb  ../mysql*.changes ../mysql*.build .
+elif [ -f /etc/redhat-release -o -f /etc/redhat_version ] ; then
+  if [ -n "$minor_version" ] ; then
+    sed -i -e "s/\(Release: .*\)/\1.$minor_version/" redhat/mysql.spec
+  fi
+  if [ -n "$skip_dependencies" ]; then
+    rpmbuild_opts="$rpmbuild_opts --nodeps"
+  fi
+  [ -f mysql-5.6.10.tar.gz ] || wget http://mirror.cogentco.com/pub/mysql/MySQL-5.6/mysql-5.6.10.tar.gz
+  [ -f mysql-5.6.10-nodocs.tar.gz ] || ./generate-tarball.sh 5.6.10
+  cp mysql-5.6.10-nodocs.tar.gz ~/rpmbuild/SOURCES
+  cp redhat/* ~/rpmbuild/SOURCES
+  rpmbuild -ba redhat/mysql.spec $rpmbuild_opts
+  mv ~/rpmbuild/RPMS/*/mysql*.rpm .
+fi
