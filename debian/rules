@@ -80,7 +80,7 @@ configure-stamp:
 	@echo "RULES.$@"
 	dh_testdir
 	( test -d $(builddir) || mkdir $(builddir) ) && cd $(builddir) && \
-	sh -c  "PATH=$${MYSQL_BUILD_PATH:-"/bin:/usr/bin"} \
+	sh -c  'PATH=$${MYSQL_BUILD_PATH:-"/bin:/usr/bin"} \
 	    	CC=$${MYSQL_BUILD_CC:-gcc} \
 		CFLAGS=$${MYSQL_BUILD_CFLAGS:-"-O2 -DBIG_JOINS=1 -fno-strict-aliasing"} \
 	    	CXX=$${MYSQL_BUILD_CXX:-g++} \
@@ -99,14 +99,14 @@ configure-stamp:
 	    -DMYSQL_SERVER_SUFFIX="-$(DEBVERSION)" \
 	    -DSYSTEM_TYPE="debian-$(DEB_BUILD_GNU_SYSTEM)" \
 	    -DINSTALL_LAYOUT=RPM \
-	    -DINSTALL_LIBDIR=lib/$(DEB_HOST_MULTIARCH) \
+	    -DINSTALL_LIBDIR=lib \
 	    -DINSTALL_PLUGINDIR=lib/mysql/plugin \
         -DWITH_EMBEDDED_SERVER=ON \
         -DHAVE_EMBEDDED_PRIVILEGE_CONTROL=ON \
 	    -DWITH_ARCHIVE_STORAGE_ENGINE=ON \
 	    -DWITH_BLACKHOLE_STORAGE_ENGINE=ON \
 	    -DWITH_FEDERATED_STORAGE_ENGINE=ON \
-		-DWITH_EXTRA_CHARSETS=all .."
+		-DWITH_EXTRA_CHARSETS=all ..'
 	touch $@
 
 override_dh_auto_build: build-stamp
