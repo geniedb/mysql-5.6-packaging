@@ -52,7 +52,7 @@ elif [ -f /etc/redhat-release -o -f /etc/redhat_version ] ; then
   if [ -n "$skip_dependencies" ]; then
     rpmbuild_opts="$rpmbuild_opts --nodeps"
   fi
-  [ -f ~/rpmbuild/SOURCES/mysql-5.6.10.tar.gz ] || wget http://mirror.cogentco.com/pub/mysql/MySQL-5.6/mysql-5.6.10.tar.gz -p ~/rpmbuild/SOURCES
+  [ -f ~/rpmbuild/SOURCES/mysql-5.6.10.tar.gz ] || wget http://mirror.cogentco.com/pub/mysql/MySQL-5.6/mysql-5.6.10.tar.gz -P ~/rpmbuild/SOURCES
   [ -f ~/rpmbuild/SOURCES/mysql-5.6.10-nodocs.tar.gz ] || (cd ~/rpmbuild/SOURCES ./generate-tarball.sh 5.6.10)
   cp redhat/* ~/rpmbuild/SOURCES
   rpmbuild -ba redhat/mysql.spec $rpmbuild_opts
