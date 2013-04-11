@@ -100,8 +100,6 @@ Requires(preun): chkconfig
 # This is for /sbin/service
 Requires(preun): initscripts
 Requires(postun): initscripts
-# mysqlhotcopy needs DBI/DBD support
-Requires: perl-DBI, perl-DBD-MySQL
 Conflicts: MySQL-server
 
 %description server
