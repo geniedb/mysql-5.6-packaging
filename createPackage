@@ -41,8 +41,13 @@ if [ -f /etc/debian_version -o -f /etc/debian_release ] ; then
   if [ -n "$skip_dependencies" ]; then
     debuild_opts="$debuild_opts -d"
   fi
-  uscan --download-current-version --destdir .
- tar -zxf mysql-5.6_5.6.10.orig.tar.gz --strip-components 1 
+  if [ -f /usr/src/mysql-5.6_5.6.10.orig.tar.gz ]
+  then
+    tar -zxf /usr/src/mysql-5.6_5.6.10.orig.tar.gz --strip-components 1 
+  else
+    uscan --download-current-version --destdir .
+    tar -zxf mysql-5.6_5.6.10.orig.tar.gz --strip-components 1 
+  fi
   debuild -uc -us -b -i $debuild_opts
   mv ../mysql*.deb ../libmysql*.deb  ../mysql*.changes ../mysql*.build .
 elif [ -f /etc/redhat-release -o -f /etc/redhat_version ] ; then
