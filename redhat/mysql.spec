@@ -233,7 +233,6 @@ cmake .	-DBUILD_CONFIG=mysql_release \
 	-DINSTALL_LAYOUT=RPM \
 	-DCMAKE_INSTALL_PREFIX="%{_prefix}" \
 	-DCMAKE_BUILD_TYPE=Debug \
-	-DDEBUG_EXTNAME=OFF \
 	-DINSTALL_INCLUDEDIR=include/mysql \
 	-DINSTALL_INFODIR=share/info \
 	-DINSTALL_LIBDIR="%{_lib}/mysql" \
