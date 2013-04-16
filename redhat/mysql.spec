@@ -27,7 +27,6 @@ Source999: filter-requires-mysql.sh
 
 # Comments for these patches are in the patch files.
 Patch1: mysql-errno.patch
-Patch2: mysql-strmov.patch
 Patch3: mysql-install-test.patch
 Patch4: mysql-expired-certs.patch
 Patch5: mysql-stack-guard.patch
@@ -174,7 +173,6 @@ the MySQL sources.
 %setup -q -n mysql-%{version}
 
 %patch1 -p1
-%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
