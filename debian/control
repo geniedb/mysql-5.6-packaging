@@ -36,7 +36,7 @@ Description: PIC version of MySQL embedded server development files
  .
  This package includes the -fPIC version of the embedded server library.
 
-Package: mysql-dev
+Package: mysql-dbg
 Architecture: any
 Section: debug
 Depends: ${misc:Depends}
